@@ -73,7 +73,7 @@ func CreateBeacon(name_val string, i int) *bytes.Buffer {
 	binary.Write(buffer, binary.LittleEndian, Head_pack)
 
 	//이름 정보 입력
-	temp_num := strconv.FormatInt(i, 10)
+	temp_num := strconv.FormatInt(int64(i), 10)
 	Beacon_name := name_val + temp_num
 	LEN_Bea := len(Beacon_name)
 	binary.Write(buffer, binary.LittleEndian, uint8(LEN_Bea))
