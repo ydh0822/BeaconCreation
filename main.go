@@ -39,7 +39,6 @@ func BEC() {
 	//radiotap 필드 설정
 	radiotap.Present = layers.RadioTapPresentTSFT | layers.RadioTapPresentFlags | layers.RadioTapPresentRate
 	radiotap.TSFT = uint64(time.Now().UnixNano() / 1000)
-	// radiotap.Flags.CFP = true
 	radiotap.Rate = 2
 
 	packet := gopacket.NewSerializeBuffer()
@@ -50,6 +49,8 @@ func BEC() {
 			log.Fatal(err)
 		}
 		fmt.Printf("beacon: %v\n", beacon)
+		fmt.Printf("beacon.Contents: %v\n", beacon.Contents)
+		fmt.Printf("beacon.Dot11Mgmt: %v\n", beacon.Dot11Mgmt)
 		handle.WritePacketData(packet.Bytes())
 		time.Sleep(time.Millisecond * 50)
 	}
