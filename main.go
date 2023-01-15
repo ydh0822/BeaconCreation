@@ -41,7 +41,7 @@ const (
 )
 
 func DectoHex(byte_list []byte) {
-	fmt.Println("%02x ", byte_list)
+	fmt.Printf("%02x ", byte_list)
 }
 
 func BEC() {
