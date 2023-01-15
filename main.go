@@ -59,6 +59,7 @@ func BEC() {
 	beacon.Timestamp = uint64(time.Now().Unix())
 	beacon.Interval = 100
 	beacon.Contents = []byte{0x03, 0x30, 0x20, 0x10}
+	beacon.Dot11Mgmt.Payload = []byte{0xff, 0xdd, 0xaa, 0xbb}
 
 	//radiotap 필드 설정
 	radiotap.Present = layers.RadioTapPresentTSFT | layers.RadioTapPresentFlags | layers.RadioTapPresentRate
