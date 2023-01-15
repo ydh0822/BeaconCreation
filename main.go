@@ -72,7 +72,7 @@ func CreateBeacon() *bytes.Buffer {
 	fmt.Printf("Input WiFi Name : ")
 	fmt.Scanln(&Beacon_name)
 	LEN_Bea := len(Beacon_name)
-	binary.Write(buffer, binary.LittleEndian, uint(LEN_Bea))
+	binary.Write(buffer, binary.LittleEndian, uint8(LEN_Bea))
 	buffer.WriteString(Beacon_name)
 
 	//이름 푸터, 덤프파일 입력
