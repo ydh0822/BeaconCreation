@@ -39,7 +39,7 @@ func ExcuteCMD(script string, arg ...string) {
 type H4uN_packet struct {
 	dumpdata  [24]byte // 몰라 버려
 	Signiture [4]byte  //0x00800000 radiotap 시그니처
-	dumpdata2 [34]byte
+	dumpdata2 [33]byte
 }
 
 type H4uN_Name_Packet struct {
@@ -64,7 +64,7 @@ func CreateBeacon() *bytes.Buffer {
 	//해더 정보 입력
 	Head_pack.dumpdata = [24]byte{0x00, 0x00, 0x18, 0x00, 0x2e, 0x40, 0x00, 0xa0, 0x20, 0x08, 0x00, 0x00, 0x00, 0x02, 0x7b, 0x09, 0xa0, 0x00, 0xc7, 0x00, 0x00, 0x00, 0xc7, 0x00}
 	Head_pack.Signiture = [4]byte{0x80, 0x00, 0x00, 0x00}
-	Head_pack.dumpdata2 = [34]byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x70, 0x5d, 0xcc, 0xe8, 0x69, 0xa6, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x70, 0x8d, 0x1c, 0x80, 0xf5, 0xee, 0x44, 0x01, 0x00, 0x00, 0x64, 0x00, 0x11, 0x0c, 0x00, 0x00}
+	Head_pack.dumpdata2 = [33]byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x70, 0x5d, 0xcc, 0xe8, 0x69, 0xa6, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x70, 0x8d, 0x1c, 0x80, 0xf5, 0xee, 0x44, 0x01, 0x00, 0x00, 0x64, 0x00, 0x11, 0x0c, 0x00}
 	binary.Write(buffer, binary.LittleEndian, Head_pack)
 
 	//이름 정보 입력
@@ -101,29 +101,6 @@ func BEC() {
 
 	Buffer := CreateBeacon()
 
-	// var radiotap layers.RadioTap      // radiotap 설정
-	// var beacon layers.Dot11MgmtBeacon // 비콘 선언
-	// beacon.Timestamp = uint64(time.Now().Unix())
-	// beacon.Interval = 100
-	// beacon.Contents = []byte{0x03, 0x30, 0x20, 0x10}
-	// beacon.Dot11Mgmt.Payload = []byte{0xff, 0xdd, 0xaa, 0xbb}
-
-	// //radiotap 필드 설정
-	// radiotap.Present = layers.RadioTapPresentTSFT | layers.RadioTapPresentFlags | layers.RadioTapPresentRate
-	// radiotap.TSFT = uint64(time.Now().UnixNano() / 1000)
-	// radiotap.Rate = 2
-
-	// packet := gopacket.NewSerializeBuffer()
-	// opts := gopacket.SerializeOptions{FixLengths: true, ComputeChecksums: true}
-	// for {
-	// 	err := gopacket.SerializeLayers(packet, opts, &beacon)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-
-	// 	handle.WritePacketData(basePacket)
-	// 	time.Sleep(time.Millisecond * 50)
-	// }
 	Beacon_Packet := Buffer.Bytes()
 	for {
 		handle.WritePacketData(Beacon_Packet)
