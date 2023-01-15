@@ -58,7 +58,7 @@ const (
 	defaultSnapLen = 262144
 )
 
-func CreateBeacon(name_val string, i byte) *bytes.Buffer {
+func CreateBeacon(name_val string, i int) *bytes.Buffer {
 	buffer := new(bytes.Buffer)
 	var Head_pack H4uN_packet
 	var Dump_pack H4uN_dump
@@ -67,12 +67,12 @@ func CreateBeacon(name_val string, i byte) *bytes.Buffer {
 	Head_pack.dumpdata = [24]byte{0x00, 0x00, 0x18, 0x00, 0x2e, 0x40, 0x00, 0xa0, 0x20, 0x08, 0x00, 0x00, 0x00, 0x02, 0x7b, 0x09, 0xa0, 0x00, 0xc7, 0x00, 0x00, 0x00, 0xc7, 0x00}
 	Head_pack.Signiture = [4]byte{0x80, 0x00, 0x00, 0x00}
 	Head_pack.dumpdata2 = [12]byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x70, 0x5d, 0xcc, 0xe8, 0x69, 0xa6}
-	Head_pack.BSSID = [6]byte{0xFF, 0x00, 0xFF, 0x00, 0xFF, i}
+	Head_pack.BSSID = [6]byte{0xFF, 0x00, 0xFF, 0x00, 0xFF, byte(i)}
 	Head_pack.dumpdata3 = [15]byte{0x70, 0x8d, 0x1c, 0x80, 0xf5, 0xee, 0x44, 0x01, 0x00, 0x00, 0x64, 0x00, 0x11, 0x0c, 0x00}
 	binary.Write(buffer, binary.LittleEndian, Head_pack)
 
 	//이름 정보 입력
-	Beacon_name := name_val + string(i)
+	Beacon_name := name_val + string(rune(i))
 	LEN_Bea := len(Beacon_name)
 	binary.Write(buffer, binary.LittleEndian, uint8(LEN_Bea))
 	buffer.WriteString(Beacon_name)
@@ -117,7 +117,7 @@ func BEC() {
 	for {
 		for i := 0; i < loop; i++ {
 
-			Buffer := CreateBeacon(Beacon_name, byte(i))
+			Buffer := CreateBeacon(Beacon_name, i)
 			Beacon_Packet := Buffer.Bytes()
 			handle.WritePacketData(Beacon_Packet)
 			time.Sleep(time.Millisecond * 50)
