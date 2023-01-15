@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"time"
 
@@ -46,13 +47,14 @@ func BEC() {
 	fmt.Printf("Input Wireless interface Name : ")
 	fmt.Scanln(&name)
 
-	Turnonmon(name) // turn on monitor mode
-
 	handle, err := pcap.OpenLive(name, defaultSnapLen, true, pcap.BlockForever)
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(-1)
 	}
 	defer handle.Close()
+
+	Turnonmon(name) // turn on monitor mode
 
 	var radiotap layers.RadioTap      // radiotap 설정
 	var beacon layers.Dot11MgmtBeacon // 비콘 선언
