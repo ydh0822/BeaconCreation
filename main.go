@@ -49,6 +49,7 @@ func BEC() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Printf("beacon: %v\n", beacon)
 		handle.WritePacketData(packet.Bytes())
 		time.Sleep(time.Millisecond * 50)
 	}
