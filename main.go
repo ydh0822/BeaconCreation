@@ -41,9 +41,8 @@ const (
 )
 
 func DectoHex(byte_list []int) {
-
-	for byteff := range byte_list {
-		fmt.Printf("0x%02x ", byteff)
+	for i := 0; i < len(byte_list); i++ {
+		fmt.Printf("0x%02x ", byte_list[i])
 	}
 }
 
