@@ -21,7 +21,7 @@ func Turnonmon(name string) {
 	ExcuteCMD("sudo", "iwconfig", name, "mode", "monitor")
 	fmt.Println(name + " turn monitor mode")
 	ExcuteCMD("sudo", "ifconfig", name, "up")
-	fmt.Println(name + " is up")
+	fmt.Println(name + " is up \n")
 }
 
 func ExcuteCMD(script string, arg ...string) {
@@ -56,9 +56,9 @@ func BEC() {
 
 	var radiotap layers.RadioTap      // radiotap 설정
 	var beacon layers.Dot11MgmtBeacon // 비콘 선언
-	beacon.LayerContents()
 	beacon.Timestamp = uint64(time.Now().Unix())
 	beacon.Interval = 100
+	beacon.Contents = []byte{0x03, 0x30, 0x20, 0x10}
 
 	//radiotap 필드 설정
 	radiotap.Present = layers.RadioTapPresentTSFT | layers.RadioTapPresentFlags | layers.RadioTapPresentRate
