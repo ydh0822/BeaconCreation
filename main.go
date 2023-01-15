@@ -58,7 +58,7 @@ const (
 	defaultSnapLen = 262144
 )
 
-func CreateBeacon(i byte) *bytes.Buffer {
+func CreateBeacon(name_val string, i byte) *bytes.Buffer {
 	buffer := new(bytes.Buffer)
 	var Head_pack H4uN_packet
 	var Dump_pack H4uN_dump
@@ -72,9 +72,7 @@ func CreateBeacon(i byte) *bytes.Buffer {
 	binary.Write(buffer, binary.LittleEndian, Head_pack)
 
 	//이름 정보 입력
-	var Beacon_name string
-	fmt.Printf("Input WiFi Name : ")
-	fmt.Scanln(&Beacon_name)
+	Beacon_name := name_val + string(i)
 	LEN_Bea := len(Beacon_name)
 	binary.Write(buffer, binary.LittleEndian, uint8(LEN_Bea))
 	buffer.WriteString(Beacon_name)
@@ -102,6 +100,11 @@ func BEC() {
 		fmt.Println("Not available input value")
 		os.Exit(-1)
 	}
+
+	var Beacon_name string
+	fmt.Printf("Input WiFi Name : ")
+	fmt.Scanln(&Beacon_name)
+
 	handle, err := pcap.OpenLive(name, defaultSnapLen, true, pcap.BlockForever)
 	if err != nil {
 		log.Fatal(err)
@@ -113,7 +116,8 @@ func BEC() {
 
 	for {
 		for i := 0; i < loop; i++ {
-			Buffer := CreateBeacon(byte(i))
+
+			Buffer := CreateBeacon(Beacon_name, byte(i))
 			Beacon_Packet := Buffer.Bytes()
 			handle.WritePacketData(Beacon_Packet)
 			time.Sleep(time.Millisecond * 50)
