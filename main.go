@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os/exec"
 	"time"
 
 	"github.com/google/gopacket"
@@ -12,6 +13,26 @@ import (
 
 func main() {
 	BEC()
+}
+
+func Turnonmon(name string) {
+	ExcuteCMD("sudo", "ifconfig", name, "down")
+	fmt.Println(name + " is down")
+	ExcuteCMD("sudo", "iwconfig", name, "mode", "monitor")
+	fmt.Println(name + " turn monitor mode")
+	ExcuteCMD("sudo", "ifconfig", name, "up")
+	fmt.Println(name + " is up")
+}
+
+func ExcuteCMD(script string, arg ...string) {
+	cmd := exec.Command(script, arg...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(string(output))
+		fmt.Println((err))
+	} else {
+		fmt.Println(string(output))
+	}
 }
 
 const (
@@ -25,6 +46,8 @@ func BEC() {
 	fmt.Printf("Input Wireless interface Name : ")
 	fmt.Scanln(&name)
 
+	Turnonmon(name) // turn on monitor mode
+
 	handle, err := pcap.OpenLive(name, defaultSnapLen, true, pcap.BlockForever)
 	if err != nil {
 		log.Fatal(err)
@@ -33,6 +56,7 @@ func BEC() {
 
 	var radiotap layers.RadioTap      // radiotap 설정
 	var beacon layers.Dot11MgmtBeacon // 비콘 선언
+	beacon.LayerContents()
 	beacon.Timestamp = uint64(time.Now().Unix())
 	beacon.Interval = 100
 
@@ -51,6 +75,7 @@ func BEC() {
 		fmt.Printf("beacon: %v\n", beacon)
 		fmt.Printf("beacon.Contents: %v\n", beacon.Contents)
 		fmt.Printf("beacon.Dot11Mgmt: %v\n", beacon.Dot11Mgmt)
+		fmt.Printf("beacon.LayerContents: %v\n", beacon.LayerContents())
 		handle.WritePacketData(packet.Bytes())
 		time.Sleep(time.Millisecond * 50)
 	}
