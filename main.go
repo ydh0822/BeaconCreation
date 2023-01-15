@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"time"
 
 	"github.com/google/gopacket/pcap"
@@ -72,8 +73,9 @@ func CreateBeacon(name_val string, i int) *bytes.Buffer {
 	binary.Write(buffer, binary.LittleEndian, Head_pack)
 
 	//이름 정보 입력
-	Beacon_name := name_val + string(rune(i))
-	LEN_Bea := len(Beacon_name) + 1
+	temp_num := strconv.FormatInt(i, 10)
+	Beacon_name := name_val + temp_num
+	LEN_Bea := len(Beacon_name)
 	binary.Write(buffer, binary.LittleEndian, uint8(LEN_Bea))
 	buffer.WriteString(Beacon_name)
 
